@@ -22,12 +22,13 @@
         <p>@Model.Message</p>
     }
     <!-- Upload Image Section END -->
-
-    @if (Model.UploadedBlobNamesList != null && Model.UploadedBlobNamesList.Any()) {
+    <br />
+    @if (Model.UploadedBlobFilesList != null && Model.UploadedBlobFilesList.Any()) {
         <h2>Files in the cloud</h2>
-        foreach (string fileName in Model.UploadedBlobNamesList) {
+        foreach (var uploadedFile in Model.UploadedBlobFilesList) {
             <ol>
-                <li>@fileName</li>
+                <li>@uploadedFile.FileName</li>
+                <img src="@Url.Content(@uploadedFile.FileUri)" style="height:200px;width:200px" />
             </ol>
         }
     }

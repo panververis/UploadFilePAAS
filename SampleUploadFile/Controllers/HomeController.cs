@@ -56,7 +56,7 @@ namespace SampleUploadFile.Controllers {
 
             //  If there already were any uploaded blobs, populate the ViewModel's List
             if (uploadedBlobsList != null && uploadedBlobsList.Any()) {
-                viewModel.UploadedBlobNamesList = uploadedBlobsList.Select(x => x.Uri.ToString().Split('/').Last()).ToList();
+                viewModel.UploadedBlobFilesList = uploadedBlobsList.Select(x => new UploadedFileViewModel() { FileName = x.Uri.ToString().Split('/').Last(), FileUri = x.Uri.ToString() }).ToList();
             }
 
             return View(viewModel);

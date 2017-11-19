@@ -7,14 +7,19 @@ namespace SampleUploadFile.Models {
 
     public class SampleUploadFileViewModel {
         //      Properties
-        public string           SelectedFileName        { get; set; }
-        public string           Message                 { get; set; }
-        public List<string>     UploadedBlobNamesList   { get; set; }
+        public string                       SelectedFileName        { get; set; }
+        public string                       Message                 { get; set; }
+        public List<UploadedFileViewModel>  UploadedBlobFilesList   { get; set; }
 
         //      Ctor
         public SampleUploadFileViewModel() {
-            UploadedBlobNamesList = new List<string>();
+            UploadedBlobFilesList = new List<UploadedFileViewModel>();
         }
+    }
+
+    public class UploadedFileViewModel {
+        public string FileName { get; set; }
+        public string FileUri  { get; set; }
     }
 
 }
