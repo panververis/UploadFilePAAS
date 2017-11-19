@@ -7,16 +7,19 @@
 </div>
 
 <div class="row">
-    @*Display Image Section*@
-    @*<img src="@Url.Content("~/Content/Images/image.jpg")" style="height:400px;width:400px"; />*@
+    @* Display Image Section START *@
+    <!-- <img src="@Url.Content("~/Content/Images/image.jpg")" style="height:400px;width:400px"; /> -->
+    @* Display Image Section END *@
 
-    @* Upload Image Section *@
-    @*<h2>UploadFile</h2>
+    @* Upload Image Section START *@
+    <h2>UploadFile</h2>
     @using (Html.BeginForm("UploadFile", "Home", FormMethod.Post, new { enctype = "multipart/form-data" })) {
         <div>
             @Html.TextBox("file", "", new { type = "file" }) <br />
             <input type="submit" value="Upload" />
             @ViewBag.Message
         </div>
-    }*@
+    }
+    @* Upload Image Section END *@
+
 </div>
