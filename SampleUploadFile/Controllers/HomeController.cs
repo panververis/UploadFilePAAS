@@ -57,6 +57,13 @@ namespace SampleUploadFile.Controllers {
             //  If there already were any uploaded blobs, populate the ViewModel's List
             if (uploadedBlobsList != null && uploadedBlobsList.Any()) {
                 viewModel.UploadedBlobFilesList = uploadedBlobsList.Select(x => new UploadedFileViewModel() { FileName = x.Uri.ToString().Split('/').Last(), FileUri = x.Uri.ToString() }).ToList();
+
+                //  Populate the fancy little delete messages
+                int count = 1;
+                foreach (UploadedFileViewModel file in viewModel.UploadedBlobFilesList) {
+                    file.DeleteMessage = GetDeleteMessage(count);
+                    count++;
+                }
             }
 
             return View(viewModel);
@@ -221,6 +228,26 @@ namespace SampleUploadFile.Controllers {
             //  Checking whether the file name ends with either one of the above defined file formats, and returning that value
             bool isAcceptableFileFormat = acceptableImageFormatsArr.Any(item => file.FileName.EndsWith(item, StringComparison.OrdinalIgnoreCase));
             return isAcceptableFileFormat;
+        }
+        
+        /// <summary>
+        /// Helper function to get the fancy little delete messages
+        /// </summary>
+        private string GetDeleteMessage(int count) {
+            if (count % 5 == 0) {
+                return "Begone with this image!";
+            }
+            else if (count % 4 == 0) {
+                return "Shoot it down";
+            } else if (count % 3 == 0) {
+                return "Land this baby";
+            }
+            else if (count % 2 == 0) {
+                return "Delete it";
+            }
+            else {
+                return "Re-activate gravity";
+            }
         }
 
         #endregion

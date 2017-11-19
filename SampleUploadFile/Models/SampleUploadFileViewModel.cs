@@ -18,8 +18,9 @@ namespace SampleUploadFile.Models {
     }
 
     public class UploadedFileViewModel {
-        public string FileName { get; set; }
-        public string FileUri  { get; set; }
+        public string FileName      { get; set; }
+        public string FileUri       { get; set; }
+        public string DeleteMessage { get; set; }
     }
 
 }
