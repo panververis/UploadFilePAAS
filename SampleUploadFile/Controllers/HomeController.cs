@@ -129,7 +129,7 @@ namespace SampleUploadFile.Controllers {
                             TempData["Message"] = $" File upload failed. Reason: {error}";
                         }
                         else {
-                            TempData["Message"]         = "File Uploaded Successfully!";
+                            TempData["Message"]         = $"File {file.FileName} Uploaded Successfully!";
                             TempData["SelectedFile"]    = file.FileName;
                         }
                     }
