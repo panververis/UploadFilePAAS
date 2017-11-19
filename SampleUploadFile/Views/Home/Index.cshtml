@@ -28,9 +28,8 @@
         foreach (var uploadedFile in Model.UploadedBlobFilesList) {
             <ol>
                 <li>@uploadedFile.FileName</li>
-                <img src="@Url.Content(@uploadedFile.FileUri)" style="height:200px;width:200px" />
+                <img src="@Url.Content(@uploadedFile.FileUri)" style="height:150px;width:150px" />
             </ol>
         }
     }
-
 </div>

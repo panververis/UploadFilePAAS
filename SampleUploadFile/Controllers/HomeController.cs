@@ -68,7 +68,6 @@ namespace SampleUploadFile.Controllers {
 
             //  First up surrounding everything in a try - catch block, to ensure safe execution
             try {
-
                 // Checking whether a valid file of a size > 0 was selected
                 if (file != null && file.ContentLength > 0) {
 
