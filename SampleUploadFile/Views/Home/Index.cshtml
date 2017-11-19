@@ -30,6 +30,7 @@
             <ol>
                 <li>@uploadedFile.FileName</li>
                 <img src="@Url.Content(@uploadedFile.FileUri)" style="height:150px;width:150px" />
+                @Html.ActionLink("Delete", "DeleteFile", new { fileName = @uploadedFile.FileName })
             </ol>
         }
     }

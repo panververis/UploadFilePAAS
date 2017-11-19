@@ -142,7 +142,7 @@ namespace SampleUploadFile.Controllers {
 
                 //  Inform the user that an invalid file was selected
                 else {
-                    //  Inform the user of the succesfully uploaded file
+                    //  Inform the user of the file upload being aborted
                     TempData["Message"] = "Invalid file selected. File upload aborted!";
                 }
             }
@@ -151,6 +151,50 @@ namespace SampleUploadFile.Controllers {
             catch {
                 //  In case something goes wrong, inform the user that the uploading operation failed
                 TempData["Message"] = "File upload failed!";
+            }
+
+            //  And return to the home / landing page
+            return RedirectToAction("Index", "Home");
+        }
+
+        //  "Delete a file" action
+        public ActionResult DeleteFile(string fileName) {
+            //  First up surrounding everything in a try - catch block, to ensure safe execution
+            try {
+                //  In case something goes wrong, inform the user that the deleting operation failed
+                if (String.IsNullOrEmpty(fileName)) {
+                    TempData["Message"] = "File deletion failed!";
+                }
+                else {
+                    //  Initializing a "Blob Storage Account" instance, in order to retrieve the Blob Storage Connection String
+                    string blobStorageConnectionString = String.Empty;
+                    CloudStorageAccount blobStorageAccount = null;
+                    try {
+                        blobStorageConnectionString = CloudConfigurationManager.GetSetting("StorageConnectionString");
+                        blobStorageAccount = CloudStorageAccount.Parse(blobStorageConnectionString);
+                    }
+                    catch (Exception ex) {
+                        TempData["Message"] = $" File deletion failed. Reason: {ex.Message}";
+                    }
+
+                    //  Creating a Blob Storage Client, to have access to Blob Containers
+                    CloudBlobClient blobStorageClient = blobStorageAccount.CreateCloudBlobClient();
+
+                    //  Grab a reference to a previously created container
+                    CloudBlobContainer imagesBlobContainer = blobStorageClient.GetContainerReference("images");
+
+                    // Get the reference to the block blob from the container
+                    CloudBlockBlob blockBlob = imagesBlobContainer.GetBlockBlobReference(fileName);
+
+                    //  Attempt to delete the file
+                    blockBlob.DeleteIfExists();
+
+                    TempData["Message"] = $"File {fileName} just crashed and burned";
+                }
+            }
+            catch (Exception ex) {
+                //  In case something goes wrong, inform the user that the uploading operation failed
+                TempData["Message"] = $"File upload failed! Error: {ex.Message}";
             }
 
             //  And return to the home / landing page
