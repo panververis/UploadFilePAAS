@@ -30,7 +30,7 @@
             <ol>
                 <li>@uploadedFile.FileName</li>
                 <img src="@Url.Content(@uploadedFile.FileUri)" style="height:150px;width:150px" />
-                @Html.ActionLink($" ~~{@uploadedFile.DeleteMessage}~~", "DeleteFile", new { fileName = @uploadedFile.FileName }, new { @class = "btn btn-danger glyphicon glyphicon-apple" })
+                @Html.ActionLink(" " + @uploadedFile.DeleteMessage, "DeleteFile", new { fileName = @uploadedFile.FileName }, new { @class = "btn btn-danger fa fa-apple" })
                 <br /><br />
             </ol>
         }
