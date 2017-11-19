@@ -4,8 +4,8 @@
 }
 
 <div class="jumbotron">
-    <h1> Hello World! </h1>
-    <h3> This is a sample app, aiming to display the power, versatility, and mostly, ease of use of Azure Web Apps and Storage!</h3>
+    <h1> Hello there, world </h1>
+    <h3> This is a sample app, aiming to display the power, versatility and above all, ease of use of Azure Web Apps and Storage!</h3>
 </div>
 
 <div class="row">
@@ -14,7 +14,7 @@
     <!-- Display Image Section END -->
 
     <!-- Upload Image Section START -->
-    <h2>UploadFile</h2>
+    <h2>Upload a file! Yep, send it floating into the sky.</h2>
     @using (Html.BeginForm("UploadFile", "Home", FormMethod.Post, new { enctype = "multipart/form-data" })) {
         <div>
             @Html.TextBox("file", "", new { type = "file" }) <br />
@@ -25,7 +25,7 @@
     <!-- Upload Image Section END -->
     <br />
     @if (Model.UploadedBlobFilesList != null && Model.UploadedBlobFilesList.Any()) {
-        <h2>Files in the cloud</h2>
+        <h2>The following files are officially on cloud nine</h2>
         foreach (var uploadedFile in Model.UploadedBlobFilesList) {
             <ol>
                 <li>@uploadedFile.FileName</li>
