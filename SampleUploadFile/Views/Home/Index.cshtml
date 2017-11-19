@@ -25,7 +25,7 @@
     <!-- Upload Image Section END -->
     <br />
     @if (Model.UploadedBlobFilesList != null && Model.UploadedBlobFilesList.Any()) {
-        <h2>The following files are officially on cloud nine</h2>
+        <h2>The following images are officially on cloud nine</h2>
         foreach (var uploadedFile in Model.UploadedBlobFilesList) {
             <ol>
                 <li>@uploadedFile.FileName</li>
