@@ -23,11 +23,13 @@
     }
     <!-- Upload Image Section END -->
 
-    <h2>Files in the cloud</h2>
-    @foreach (string fileName in Model.UploadedBlobNamesList) {
-        <ol>
-            <li>@fileName</li>
-        </ol>
+    @if (Model.UploadedBlobNamesList != null && Model.UploadedBlobNamesList.Any()) {
+        <h2>Files in the cloud</h2>
+        foreach (string fileName in Model.UploadedBlobNamesList) {
+            <ol>
+                <li>@fileName</li>
+            </ol>
+        }
     }
 
 </div>
