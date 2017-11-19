@@ -1,4 +1,5 @@
-﻿@{
+﻿@model SampleUploadFile.Models.SampleUploadFileViewModel
+@{
     ViewBag.Title = "Home Page";
 }
 
@@ -18,7 +19,15 @@
             @Html.TextBox("file", "", new { type = "file" }) <br />
             <input type="submit" value="Upload" />
         </div>
-        <p>@ViewBag.Message</p>
+        <p>@Model.Message</p>
     }
     <!-- Upload Image Section END -->
+
+    <h2>Files in the cloud</h2>
+    @foreach (string fileName in Model.UploadedBlobNamesList) {
+        <ol>
+            <li>@fileName</li>
+        </ol>
+    }
+
 </div>

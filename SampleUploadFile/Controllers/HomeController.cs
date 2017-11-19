@@ -1,7 +1,9 @@
 ﻿using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using SampleUploadFile.Models;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +17,49 @@ namespace SampleUploadFile.Controllers {
 
         //  "Index" Action
         public ActionResult Index() {
-            return View();
+
+            //  Initializing the ViewModel
+            SampleUploadFileViewModel viewModel = new SampleUploadFileViewModel();
+
+            //  Checking whether any values have been passed in within the TempData dictionary
+            //  1) Message
+            //  2) Already selected file name
+            string message = (TempData["Message"] as string);
+            if (!String.IsNullOrEmpty(message)) {
+                viewModel.Message = message;
+            }
+
+            string selectedFileName = (TempData["SelectedFile"] as string);
+            if (!String.IsNullOrEmpty(selectedFileName)) {
+                viewModel.SelectedFileName = selectedFileName;
+            }
+
+            //  Initializing a "Blob Storage Account" instance, in order to retrieve the Blob Storage Connection String
+            string blobStorageConnectionString = String.Empty;
+            CloudStorageAccount blobStorageAccount = null;
+            try {
+                blobStorageConnectionString = CloudConfigurationManager.GetSetting("StorageConnectionString");
+                blobStorageAccount = CloudStorageAccount.Parse(blobStorageConnectionString);
+            }
+            catch (Exception ex) {
+                TempData["Message"] = $" File upload failed. Reason: {ex.Message}";
+            }
+
+            //  Creating a Blob Storage Client, to have access to Blob Containers
+            CloudBlobClient blobStorageClient = blobStorageAccount.CreateCloudBlobClient();
+
+            //  Grab a reference to a previously created container
+            CloudBlobContainer imagesBlobContainer = blobStorageClient.GetContainerReference("images");
+
+            //  Retrieving a list of all the uploaded Blobs
+            IEnumerable<IListBlobItem> uploadedBlobsList = imagesBlobContainer.ListBlobs(null, true);
+
+            //  If there already were any uploaded blobs, populate the ViewModel's List
+            if (uploadedBlobsList != null && uploadedBlobsList.Any()) {
+                viewModel.UploadedBlobNamesList = uploadedBlobsList.Select(x => x.Uri.ToString().Split('/').Last()).ToList();
+            }
+
+            return View(viewModel);
         }
 
         //  "Upload a file" action
@@ -50,7 +94,7 @@ namespace SampleUploadFile.Controllers {
                         blobStorageConnectionString = CloudConfigurationManager.GetSetting("StorageConnectionString");
                         blobStorageAccount = CloudStorageAccount.Parse(blobStorageConnectionString);
                     } catch (Exception ex) {
-                        ViewBag.Message = $" File upload failed. Reason: {ex.Message}";
+                        TempData["Message"] = $" File upload failed. Reason: {ex.Message}";
                     }
 
                     //  Creating a Blob Storage Client, to have access to Blob Containers
@@ -65,10 +109,10 @@ namespace SampleUploadFile.Controllers {
                     //  Before attempting to upload the image, check whether it actually IS an image
                     if (!IsImage(file)) {
                         //  Inform the user of the unsupported media type format
-                        ViewBag.Message = "Unsupported file type. File upload aborted!";
+                        TempData["Message"] = "Unsupported file type. File upload aborted!";
                     }
                     else {
-
+                        //  Locally defined string variable to keep track of any uploading errors
                         string error = String.Empty;
 
                         //  Open a Read / Input stream, and attempt to upload the image
@@ -81,8 +125,14 @@ namespace SampleUploadFile.Controllers {
                             }
                         }
 
-                        //  Inform the user of the succesfully uploaded file 
-                        ViewBag.Message = "File Uploaded Successfully!";
+                        //  Inform the user of the operation's outcome
+                        if (!String.IsNullOrEmpty(error)) {
+                            TempData["Message"] = $" File upload failed. Reason: {error}";
+                        }
+                        else {
+                            TempData["Message"]         = "File Uploaded Successfully!";
+                            TempData["SelectedFile"]    = file.FileName;
+                        }
                     }
 
                     #endregion
@@ -94,14 +144,14 @@ namespace SampleUploadFile.Controllers {
                 //  Inform the user that an invalid file was selected
                 else {
                     //  Inform the user of the succesfully uploaded file
-                    ViewBag.Message = "Invalid file selected. File upload aborted!";
+                    TempData["Message"] = "Invalid file selected. File upload aborted!";
                 }
             }
 
             //  In case the operation failed for any reason / unccaught exception, return to the View informaing the user as well
             catch {
                 //  In case something goes wrong, inform the user that the uploading operation failed
-                ViewBag.Message = "File upload failed!";
+                TempData["Message"] = "File upload failed!";
             }
 
             //  And return to the home / landing page
