@@ -19,6 +19,7 @@ namespace SampleUploadFile.Services {
         public string               _blobStorageConnectionString    { get; private set; }
         public CloudStorageAccount  _blobStorageAccount             { get; private set; }
         public CloudBlobClient      _blobStorageClient              { get; private set; }
+        public string               _defaultContainerName           { get; private set; }
 
         #endregion
 
@@ -26,12 +27,13 @@ namespace SampleUploadFile.Services {
 
         /// <summary>
         /// Default / parameterless constructor.
-        /// Also initializes the "_blobStorageConnectionString" and the "_blobStorageAccount"
+        /// Also initializes the "_blobStorageConnectionString", "_blobStorageAccount" and the "_defaultContainerName"
         /// </summary>
         public AzureBlobStorageService() {
             _blobStorageConnectionString    = CloudConfigurationManager.GetSetting("StorageConnectionString");
             _blobStorageAccount             = CloudStorageAccount.Parse(_blobStorageConnectionString);
             _blobStorageClient              = _blobStorageAccount.CreateCloudBlobClient();
+            _defaultContainerName           = "files";
         }
 
         #endregion
@@ -39,44 +41,47 @@ namespace SampleUploadFile.Services {
         #region Methods
 
         /// <summary>
-        /// Public method returning a blob container, or the "images"
+        /// Public method returning a blob container, or the "_defaultContainerName"
         /// container by default, if a container name is not provided
         /// </summary>
-        public CloudBlobContainer GetBlobContainer(string containerName = "images") {
-            CloudBlobContainer imagesBlobContainer = _blobStorageClient.GetContainerReference("images");
-            return imagesBlobContainer;
+        public CloudBlobContainer GetBlobContainer(string containerName = null) {
+            if (String.IsNullOrEmpty(containerName)) {
+                containerName = _defaultContainerName;
+            }
+            CloudBlobContainer filesBlobContainer = _blobStorageClient.GetContainerReference(containerName);
+            return filesBlobContainer;
         }
 
         /// <summary>
         /// Public method returning an IEnumerable of IListBlobItems, contained within the
         /// container identified by name, as per the provided as input ContainerName. If no
-        /// value is provided as input, the "images" container is accessed by default.
+        /// value is provided as input, the "_defaultContainerName" container is accessed by default.
         /// Optional boolean prameter denoting whether the Blobs are to be returned in a
         /// hierarchical / folder-like structure, or simply in a flat (List-like) structure
         /// </summary>
         public IEnumerable<IListBlobItem> GetAllUploadedBlobs(
-            string  containerName       = "images", 
+            string  containerName       = null, 
             bool    useFlatBlobListing  = false) 
         {
-            CloudBlobContainer          imagesBlobContainer = GetBlobContainer(containerName);
-            IEnumerable<IListBlobItem>  uploadedBlobsList   = imagesBlobContainer.ListBlobs(null, useFlatBlobListing);
+            CloudBlobContainer          filesBlobContainer = GetBlobContainer(containerName);
+            IEnumerable<IListBlobItem>  uploadedBlobsList   = filesBlobContainer.ListBlobs(null, useFlatBlobListing);
             return uploadedBlobsList;
         }
 
         /// <summary>
         /// Public async method uploading a file onto the appointed container.
-        /// If no containerName is specified, it gets uploaded to the "images" folder
+        /// If no containerName is specified, it gets uploaded to the "_defaultContainerName" folder
         /// </summary>
-        public async Task<bool> UploadFile(HttpPostedFileBase file, string containerName = "images") {
+        public async Task<bool> UploadFile(HttpPostedFileBase file, string containerName = null) {
             //  Guard clause, checking against a null or "empty" file
             if (file != null && file.ContentLength > 0) {
                 //  Grabbing a reference to the appropriate container
-                CloudBlobContainer imagesBlobContainer = GetBlobContainer(containerName);
+                CloudBlobContainer filesBlobContainer = GetBlobContainer(containerName);
 
                 // Get the reference to the block blob from the container
-                CloudBlockBlob blockBlob = imagesBlobContainer.GetBlockBlobReference(file.FileName);
+                CloudBlockBlob blockBlob = filesBlobContainer.GetBlockBlobReference(file.FileName);
 
-                //  Open a Read / Input stream, and attempt to upload the image
+                //  Open a Read / Input stream, and attempt to upload the file
                 using (Stream stream = file.InputStream) {
                         await blockBlob.UploadFromStreamAsync(stream);
                 }
@@ -94,16 +99,16 @@ namespace SampleUploadFile.Services {
         /// Returns a boolean denoting whether the delete operation succeeded.
         /// Optional parameter denotes from which repository the user wishes to delete the file from
         /// </summary>
-        public bool DeleteFile(string fileName, string containerName = "images") {
+        public bool DeleteFile(string fileName, string containerName = null) {
             if (String.IsNullOrEmpty(fileName)) {
                 throw new Exception("No file name has been provided for deletion");
             }
 
             //  Grab a reference to a previously created container
-            CloudBlobContainer imagesBlobContainer = GetBlobContainer();
+            CloudBlobContainer filesBlobContainer = GetBlobContainer();
 
             // Get the reference to the block blob from the container
-            CloudBlockBlob blockBlob = imagesBlobContainer.GetBlockBlobReference(fileName);
+            CloudBlockBlob blockBlob = filesBlobContainer.GetBlockBlobReference(fileName);
 
             //  Attempt to delete the file
             blockBlob.DeleteIfExists();

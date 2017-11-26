@@ -130,7 +130,7 @@ namespace SampleUploadFile.Controllers {
         /// </summary>
         private string GetDeleteMessage(int count) {
             if (count % 5 == 0) {
-                return "Begone with this image!";
+                return "Begone with this file!";
             }
             else if (count % 4 == 0) {
                 return "Shoot it down";
