@@ -55,7 +55,14 @@ namespace SampleUploadFile.Controllers {
 
             //  If there already were any uploaded blobs, populate the ViewModel's List
             if (uploadedBlobsList != null && uploadedBlobsList.Any()) {
-                viewModel.UploadedBlobFilesList = uploadedBlobsList.Select(x => new UploadedFileViewModel() { FileName = x.Uri.ToString().Split('/').Last(), FileUri = x.Uri.ToString() }).ToList();
+                viewModel.UploadedBlobFilesList = uploadedBlobsList
+                                                        .Select(x => new UploadedFileViewModel() {
+                                                            FileName = x.Uri.ToString().Split('/').Last(),
+                                                            FileUri = x.Uri.ToString()
+                                                        }).ToList();
+
+                //  Also updating the "IsImage" flag
+                viewModel.UploadedBlobFilesList.ForEach(x => x.UpdateIsImageFlag());
 
                 //  Populate the fancy little delete messages
                 int count = 1;
@@ -106,24 +113,6 @@ namespace SampleUploadFile.Controllers {
         #endregion
 
         #region Helper methods
-
-        /// <summary>
-        /// Helper method denoting whether the provided as input file is an image
-        /// </summary>
-        public bool IsImage(HttpPostedFileBase file) {
-
-            //  If the ContentType contains the word "image", return true
-            if (file.ContentType.Contains("image")) {
-                return true;
-            }
-
-            //  Initializing a string array holding all the acceptable image formats
-            string[] acceptableImageFormatsArr = new string[] { ".jpg", ".png", ".gif", ".jpeg" };
-
-            //  Checking whether the file name ends with either one of the above defined file formats, and returning that value
-            bool isAcceptableFileFormat = acceptableImageFormatsArr.Any(item => file.FileName.EndsWith(item, StringComparison.OrdinalIgnoreCase));
-            return isAcceptableFileFormat;
-        }
         
         /// <summary>
         /// Helper function to get the fancy little delete messages

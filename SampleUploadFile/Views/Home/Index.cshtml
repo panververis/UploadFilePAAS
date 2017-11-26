@@ -22,13 +22,16 @@
     <br />
     @if (Model.UploadedBlobFilesList != null && Model.UploadedBlobFilesList.Any()) {
         <h2>The following files are officially on cloud nine</h2>
-        foreach (var uploadedFile in Model.UploadedBlobFilesList) {
-            <ol>
-                <li>@uploadedFile.FileName</li>
+        <ol>
+            @foreach (var uploadedFile in Model.UploadedBlobFilesList) {
+            <li>uploadedFile.FileName</li>
+            if (uploadedFile.IsImage) {
                 <img src="@Url.Content(@uploadedFile.FileUri)" style="height:150px;width:150px" />
-                @Html.ActionLink(" " + @uploadedFile.DeleteMessage, "DeleteFile", new { fileName = @uploadedFile.FileName }, new { @class = "btn btn-danger fa fa-apple" })
-                <br /><br />
-            </ol>
-        }
+            }
+            @Html.ActionLink(" " + @uploadedFile.DeleteMessage, "DeleteFile", new { fileName = @uploadedFile.FileName }, new { @class = "btn btn-danger fa fa-apple" })
+            <br />
+            <br />
+            }
+        </ol>
     }
 </div>
