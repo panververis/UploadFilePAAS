@@ -24,13 +24,15 @@
         <h2>The following files are officially on cloud nine</h2>
         <ol>
             @foreach (var uploadedFile in Model.UploadedBlobFilesList) {
-            <li>uploadedFile.FileName</li>
-            if (uploadedFile.IsImage) {
-                <img src="@Url.Content(@uploadedFile.FileUri)" style="height:150px;width:150px" />
-            }
-            @Html.ActionLink(" " + @uploadedFile.DeleteMessage, "DeleteFile", new { fileName = @uploadedFile.FileName }, new { @class = "btn btn-danger fa fa-apple" })
-            <br />
-            <br />
+                <li>
+                    @uploadedFile.FileName
+                    @if (uploadedFile.IsImage) {
+                        <img src="@Url.Content(@uploadedFile.FileUri)" style="height:150px;width:150px" />
+                    }
+                    @Html.ActionLink(" " + @uploadedFile.DeleteMessage, "DeleteFile", new { fileName = @uploadedFile.FileName }, new { @class = "btn btn-danger fa fa-apple" })
+                    <br />
+                    <br />
+                </li>
             }
         </ol>
     }
