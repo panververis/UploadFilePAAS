@@ -2,6 +2,7 @@
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using SampleUploadFile.Models;
+using SampleUploadFile.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,6 +13,24 @@ using System.Web.Mvc;
 
 namespace SampleUploadFile.Controllers {
     public class HomeController : Controller {
+
+        #region Properties
+
+        public AzureBlobStorageService _azureBlobStorageService { get; private set; }
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Default parameterless constructor.
+        /// Also intializes the _azureBlobStorageService
+        /// </summary>
+        public HomeController() {
+            _azureBlobStorageService = new AzureBlobStorageService();
+        }
+
+        #endregion
 
         #region Controller Actions
 
