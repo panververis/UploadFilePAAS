@@ -45,6 +45,9 @@
                         case SampleUploadFile.Common.FileType.Other:
                             <img src="~/Content/Images/lochness-document.jpg" style="height:150px;width:150px" />
                             break;
+                        default:
+                            <img src="~/Content/Images/lochness-document.jpg" style="height:150px;width:150px" />
+                            break;
                     }
                     @Html.ActionLink(" " + @uploadedFile.DeleteMessage, "DeleteFile", new { fileName = @uploadedFile.FileName }, new { @class = "btn btn-danger fa fa-apple" })
                     <br />
