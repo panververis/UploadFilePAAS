@@ -26,8 +26,25 @@
             @foreach (var uploadedFile in Model.UploadedBlobFilesList) {
                 <li>
                     @uploadedFile.FileName
-                    @if (uploadedFile.IsImage) {
-                        <img src="@Url.Content(@uploadedFile.FileUri)" style="height:150px;width:150px" />
+                    @switch (uploadedFile.FileType) {
+                        case SampleUploadFile.Common.FileType.Zuperman:
+                            <img src="~/Content/Images/zuperman-document.gif" style="height:190px;width:150px" />
+                            break;
+                        case SampleUploadFile.Common.FileType.Image:
+                            <img src="@Url.Content(@uploadedFile.FileUri)" style="height:150px;width:150px" />
+                            break;
+                        case SampleUploadFile.Common.FileType.Text:
+                            <img src="~/Content/Images/text-document.png" style="height:150px;width:150px" />
+                            break;
+                        case SampleUploadFile.Common.FileType.Pdf:
+                            <img src="~/Content/Images/pdf-document.png" style="height:150px;width:150px" />
+                            break;
+                        case SampleUploadFile.Common.FileType.Excel:
+                            <img src="~/Content/Images/excel-document.png" style="height:150px;width:150px" />
+                            break;
+                        case SampleUploadFile.Common.FileType.Other:
+                            <img src="~/Content/Images/lochness-document.jpg" style="height:150px;width:150px" />
+                            break;
                     }
                     @Html.ActionLink(" " + @uploadedFile.DeleteMessage, "DeleteFile", new { fileName = @uploadedFile.FileName }, new { @class = "btn btn-danger fa fa-apple" })
                     <br />

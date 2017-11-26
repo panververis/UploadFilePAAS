@@ -62,7 +62,7 @@ namespace SampleUploadFile.Controllers {
                                                         }).ToList();
 
                 //  Also updating the "IsImage" flag
-                viewModel.UploadedBlobFilesList.ForEach(x => x.UpdateIsImageFlag());
+                viewModel.UploadedBlobFilesList.ForEach(x => x.UpdateFileTypeByFileName());
 
                 //  Populate the fancy little delete messages
                 int count = 1;
