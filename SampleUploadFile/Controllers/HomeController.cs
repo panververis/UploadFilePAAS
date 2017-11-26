@@ -21,15 +21,15 @@ namespace SampleUploadFile.Controllers {
             //  Initializing the ViewModel
             SampleUploadFileViewModel viewModel = new SampleUploadFileViewModel();
 
-            //  Checking whether any values have been passed in within the TempData dictionary
-            //  1) Message
-            //  2) Already selected file name
-            string message = (TempData["Message"] as string);
+            //  Checking whether any values have been passed in within the TempData dictionary.
+            //  If so, assign them to the ViewModel
+            ////  1) Message
+            ////  2) Already selected file name
+            string message = (TempData["Message"] as string);                   //  1)
             if (!String.IsNullOrEmpty(message)) {
                 viewModel.Message = message;
             }
-
-            string selectedFileName = (TempData["SelectedFile"] as string);
+            string selectedFileName = (TempData["SelectedFile"] as string);     //  2)
             if (!String.IsNullOrEmpty(selectedFileName)) {
                 viewModel.SelectedFileName = selectedFileName;
             }
@@ -78,21 +78,6 @@ namespace SampleUploadFile.Controllers {
                 // Checking whether a valid file of a size > 0 was selected
                 if (file != null && file.ContentLength > 0) {
 
-                    #region Previous (Basic) Uploading functionality (commented out)
-
-                    ////  Getting the Filename
-                    //string _FileName = "image.jpg"; //Path.GetFileName(File.FileName);
-
-                    ////  Combining the to-be-uploaded file's name with the pre-specified Server - side "Images" folder
-                    //string _path = Path.Combine(Server.MapPath("~/Content/Images"), _FileName);
-
-                    ////  Lastly, attempt to save (upload) the selected file
-                    //File.SaveAs(_path);
-
-                    #endregion
-
-                    #region Uploading functionality utilizing Azure Blob Storage
-
                     //  Initializing a "Blob Storage Account" instance, in order to retrieve the Blob Storage Connection String
                     string blobStorageConnectionString = String.Empty;
                     CloudStorageAccount blobStorageAccount = null;
@@ -140,8 +125,6 @@ namespace SampleUploadFile.Controllers {
                             TempData["SelectedFile"]    = file.FileName;
                         }
                     }
-
-                    #endregion
 
                     //  And return to the home / landing page
                     return RedirectToAction("Index", "Home");
