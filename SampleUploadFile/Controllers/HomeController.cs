@@ -110,6 +110,18 @@ namespace SampleUploadFile.Controllers {
             return RedirectToAction("Index", "Home");
         }
 
+        //  "Download a file" action
+        public void DownloadFile(string fileName) {
+            //  First up surrounding everything in a try - catch block, to ensure safe execution
+            try {
+                _azureBlobStorageService.DownloadFile(fileName);
+            }
+            catch (Exception ex) {
+                //  In case something goes wrong, inform the user that the downloading operation failed
+                TempData["Message"] = $"File download failed! Error: {ex.Message}";
+            }
+        }
+
         #endregion
 
         #region Helper methods

@@ -4,6 +4,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -112,6 +113,36 @@ namespace SampleUploadFile.Services {
 
             //  Attempt to delete the file
             blockBlob.DeleteIfExists();
+
+            //  Since everything seems to have gone OK, return true
+            return true;
+        }
+
+        /// <summary>
+        /// Public method downloading the file denoted by the fileName provided as input.
+        /// Returns a boolean denoting whether the download operation succeeded.
+        /// Optional parameter denotes from which repository the user wishes to download the file from
+        /// </summary>
+        public bool DownloadFile(string fileName, string containerName = null) {
+            if (String.IsNullOrEmpty(fileName)) {
+                throw new Exception("No file name has been provided for downloading");
+            }
+
+            //  Grab a reference to a previously created container
+            CloudBlobContainer filesBlobContainer = GetBlobContainer(containerName);
+
+            // Get the reference to the block blob from the container
+            CloudBlockBlob blockBlob = filesBlobContainer.GetBlockBlobReference(fileName);
+
+            //  Download from Azure
+            MemoryStream memStream = new MemoryStream();
+            blockBlob.DownloadToStream(memStream);
+            HttpContext.Current.Response.ContentType = blockBlob.Properties.ContentType.ToString();
+            HttpContext.Current.Response.AddHeader("Content-Disposition", "Attachment; filename=" + blockBlob.Name);
+            HttpContext.Current.Response.AddHeader("Content-Length", blockBlob.Properties.Length.ToString());
+            HttpContext.Current.Response.BinaryWrite(memStream.ToArray());
+            HttpContext.Current.Response.Flush();
+            HttpContext.Current.Response.Close();
 
             //  Since everything seems to have gone OK, return true
             return true;

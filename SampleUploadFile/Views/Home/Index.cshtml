@@ -50,6 +50,7 @@
                             break;
                     }
                     @Html.ActionLink(" " + @uploadedFile.DeleteMessage, "DeleteFile", new { fileName = @uploadedFile.FileName }, new { @class = "btn btn-danger fa fa-apple" })
+                    @Html.ActionLink("Download", "DownloadFile", new { fileName = @uploadedFile.FileName }, new { @class = "btn btn-info fa fa-apple" })
                     <br />
                     <br />
                 </li>
