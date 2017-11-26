@@ -53,25 +53,8 @@ namespace SampleUploadFile.Controllers {
                 viewModel.SelectedFileName = selectedFileName;
             }
 
-            //  Initializing a "Blob Storage Account" instance, in order to retrieve the Blob Storage Connection String
-            string blobStorageConnectionString = String.Empty;
-            CloudStorageAccount blobStorageAccount = null;
-            try {
-                blobStorageConnectionString = CloudConfigurationManager.GetSetting("StorageConnectionString");
-                blobStorageAccount = CloudStorageAccount.Parse(blobStorageConnectionString);
-            }
-            catch (Exception ex) {
-                TempData["Message"] = $" File upload failed. Reason: {ex.Message}";
-            }
-
-            //  Creating a Blob Storage Client, to have access to Blob Containers
-            CloudBlobClient blobStorageClient = blobStorageAccount.CreateCloudBlobClient();
-
-            //  Grab a reference to a previously created container
-            CloudBlobContainer imagesBlobContainer = blobStorageClient.GetContainerReference("images");
-
             //  Retrieving a list of all the uploaded Blobs
-            IEnumerable<IListBlobItem> uploadedBlobsList = imagesBlobContainer.ListBlobs(null, true);
+            IEnumerable<IListBlobItem> uploadedBlobsList = _azureBlobStorageService.GetAllUploadedBlobs();
 
             //  If there already were any uploaded blobs, populate the ViewModel's List
             if (uploadedBlobsList != null && uploadedBlobsList.Any()) {
