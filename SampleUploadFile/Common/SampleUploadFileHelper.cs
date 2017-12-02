@@ -5,6 +5,8 @@ using System.Web;
 
 namespace SampleUploadFile.Common {
 
+    #region (Public) Enums
+
     /// <summary>
     /// Public enum, denoting the File Type
     /// </summary>
@@ -16,6 +18,8 @@ namespace SampleUploadFile.Common {
         Zuperman    = 5,
         Other       = 6
     }
+
+    #endregion
 
     public static class SampleUploadFileHelper {
 

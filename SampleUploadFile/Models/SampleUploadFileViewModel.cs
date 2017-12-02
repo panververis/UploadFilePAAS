@@ -6,6 +6,8 @@ using System.Web;
 
 namespace SampleUploadFile.Models {
 
+    #region "Master" ViewModel
+
     public class SampleUploadFileViewModel {
         //      Properties
         public string                       SelectedFileName        { get; set; }
@@ -17,6 +19,10 @@ namespace SampleUploadFile.Models {
             UploadedBlobFilesList = new List<UploadedFileViewModel>();
         }
     }
+
+    #endregion
+
+    #region "Detail" View Models
 
     public class UploadedFileViewModel {
 
@@ -61,5 +67,7 @@ namespace SampleUploadFile.Models {
             }
         }
     }
+
+    #endregion
 
 }
